@@ -1,0 +1,265 @@
+{% extends "base.html" %} {% load static %} {% block title %} Demo Program {% endblock %} {% block content %}
+<!-- Overview -->
+<div class="d-flex justify-content-between align-items-center py-3">
+    <h2 class="h3 font-w400 mb-0">Overview</h2>
+    <div class="dropdown">
+        <button type="button" class="btn btn-sm btn-light px-3" id="dropdown-analytics-overview" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Last 30 days <i class="fa fa-fw fa-angle-down"></i>
+				</button>
+        <div class="dropdown-menu dropdown-menu-right font-size-sm" aria-labelledby="dropdown-analytics-overview">
+            <a class="dropdown-item" href="javascript:void(0)">This Week</a>
+            <a class="dropdown-item" href="javascript:void(0)">Previous Week</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="javascript:void(0)">This Month</a>
+            <a class="dropdown-item" href="javascript:void(0)">Previous Month</a>
+        </div>
+    </div>
+</div>
+<div class="row row-deck">
+    <div class="col-sm-6 col-xl-3 invisible" data-toggle="appear">
+        <a class="block block-rounded block-fx-pop text-center" href="javascript:void(0)">
+            <div class="block-content block-content-full">
+                <div class="item item-circle bg-primary-lighter mx-auto my-3">
+                    <i class="fas fa-mobile-alt text-primary" style="font-size:48px"></i>
+                </div>
+                <div class="text-black display-4 font-w700 font-size-lg">939109291</div>
+                <div class="text-muted mt-1 font-size-lg">No Device</div>
+                <div class="py-3 font-size-h4 font-w700 text-success">
+                    <i class="fa fa-caret-up mr-1"></i> 15.7%
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-sm-6 col-xl-3 invisible" data-toggle="appear" data-timeout="150">
+        <a class="block block-rounded block-fx-pop text-center" href="javascript:void(0)">
+            <div class="block-content block-content-full">
+                <div class="item item-circle bg-xinspire-lighter mx-auto my-3">
+                    <i class="fa fa-eye text-xinspire-dark"></i>
+                </div>
+                <div class="text-black display-4 font-w700 font-size-lg">10.8kw</div>
+                <div class="text-muted mt-1 font-size-lg">Total energy comsuption</div>
+                <div class="py-3 font-size-h4 font-w700 text-danger">
+                    <i class="fa fa-caret-down mr-1"></i> Default : 2.4%
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-sm-6 col-xl-3 invisible" data-toggle="appear" data-timeout="300">
+        <a class="block block-rounded block-fx-pop text-center" href="javascript:void(0)">
+            <div class="block-content block-content-full">
+                <div class="item item-circle bg-xsmooth-lighter mx-auto my-3">
+                    <i class="fa fa-columns text-xsmooth"></i>
+                </div>
+                <div class="text-black display-4 font-w700 font-size-lg">25%</div>
+                <div class="text-muted mt-1 font-size-lg">Current usage</div>
+                <div class="py-3 font-size-h4 font-w700 text-success">
+                    <i class="fas fa-chart-line mr-1" style="font-size:48px"></i> Default : 52.5%
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-sm-6 col-xl-3 invisible" data-toggle="appear" data-timeout="450">
+        <a class="block block-rounded block-fx-pop text-center" href="javascript:void(0)">
+            <div class="block-content block-content-full">
+                <div class="item item-circle bg-xplay-lighter mx-auto my-3">
+                    <i class="fa fa-level-up-alt text-xplay"></i>
+                </div>
+                <div class="text-black display-4 font-w700 font-size-lg">2635846812</div>
+                <div class="text-muted mt-1 font-size-lg">Highstest usage of device name</div>
+                <div class="py-3 font-size-h4 font-w700 text-danger">
+                    <i class="fa fa-caret-down mr-1"></i> 5.7%
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+<!-- END Overview -->
+
+<!-- Visitors Growth -->
+<div class="d-flex justify-content-between align-items-center pt-5 pb-3">
+    <h2 class="h3 font-w400 mb-0">Comsuption</h2>
+    <div class="dropdown">
+        <button type="button" class="btn btn-sm btn-light px-3" id="dropdown-analytics-visitors-growth" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					This Week <i class="fa fa-fw fa-angle-down"></i>
+				</button>
+        <div class="dropdown-menu dropdown-menu-right font-size-sm" aria-labelledby="dropdown-analytics-visitors-growth">
+            <a class="dropdown-item" href="javascript:void(0)">Last 30 days</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="javascript:void(0)">Previous Week</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="javascript:void(0)">This Month</a>
+            <a class="dropdown-item" href="javascript:void(0)">Previous Month</a>
+        </div>
+    </div>
+</div>
+<div class="block block-rounded block-fx-pop invisible" data-toggle="appear">
+    <div class="block-content block-content-full">
+        <div class="row">
+            <div class="col-md-5 col-lg-4 d-md-flex align-items-md-center">
+                <div class="p-md-2 p-lg-3">
+                    <div class="text-black display-4 font-w700">3,687</div>
+                    <div class="font-size-lg font-w700">Total Usage</div>
+                    <div class="py-3 d-flex align-items-center">
+                        <div class="bg-success-lighter px-2 py-1 rounded mr-3">
+                            <i class="fa fa-fw fa-caret-up text-success"></i>
+                        </div>
+                        <p class="mb-0">
+                            You have a <span class="font-w600 text-success">25% Growth</span> in the last 30 days. Keep it up!
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7 col-lg-8">
+                <div class="p-md-2 p-lg-3">
+                    <!-- Bars Chart Container -->
+                    <!-- Chart.js Chart is initialized in js/pages/db_analytics.min.js which was auto compiled from _es6/pages/db_analytics.js -->
+                    <!-- For more info and examples you can check out http://www.chartjs.org/docs/ -->
+                    <canvas class="js-chartjs-analytics-bars"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END Visitors Growth -->
+
+<!-- Full Table -->
+<div class="block block-rounded block-bordered">
+    <div class="block-header block-header-default">
+        <h3 class="block-title">Device List Table</h3>
+        <div class="block-options">
+            <button type="button" class="btn-block-option">
+				<i class="si si-settings"></i>
+			</button>
+        </div>
+    </div>
+    <div class="block-content">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-vcenter">
+                <thead>
+                    <tr>
+                        <th class="text-center" style="width: 100px;">
+                            <i class="far fa-user"></i>
+                        </th>
+                        <th>Name</th>
+                        <th style="width: 30%;">Email</th>
+                        <th style="width: 15%;">Access</th>
+                        <th class="text-center" style="width: 100px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center">
+                            <img class="img-avatar img-avatar48" src="{%static 'assets/media/avatars/avatar7.jpg' %}" alt="">
+                        </td>
+                        <td class="font-w600">
+                            <a href="be_pages_generic_profile.html">Lori Grant</a>
+                        </td>
+                        <td>client1<em class="text-muted">@example.com</em></td>
+                        <td>
+                            <span class="badge badge-success">Success</span>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Edit">
+									<i class="fa fa-pencil-alt"></i>
+								</button>
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Delete">
+									<i class="fa fa-times"></i>
+								</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            <img class="img-avatar img-avatar48" src="{%static 'assets/media/avatars/avatar4.jpg' %}" alt="">
+                        </td>
+                        <td class="font-w600">
+                            <a href="be_pages_generic_profile.html">Lisa Jenkins</a>
+                        </td>
+                        <td>client2<em class="text-muted">@example.com</em></td>
+                        <td>
+                            <span class="badge badge-success">Success</span>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Edit">
+									<i class="fa fa-pencil-alt"></i>
+								</button>
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Delete">
+									<i class="fa fa-times"></i>
+								</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            <img class="img-avatar img-avatar48" src="{%static 'assets/media/avatars/avatar5.jpg' %}" alt="">
+                        </td>
+                        <td class="font-w600">
+                            <a href="be_pages_generic_profile.html">Barbara Scott</a>
+                        </td>
+                        <td>client3<em class="text-muted">@example.com</em></td>
+                        <td>
+                            <span class="badge badge-success">Success</span>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Edit">
+									<i class="fa fa-pencil-alt"></i>
+								</button>
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Delete">
+									<i class="fa fa-times"></i>
+								</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            <img class="img-avatar img-avatar48" src="{%static 'assets/media/avatars/avatar4.jpg' %}" alt="">
+                        </td>
+                        <td class="font-w600">
+                            <a href="be_pages_generic_profile.html">Alice Moore</a>
+                        </td>
+                        <td>client4<em class="text-muted">@example.com</em></td>
+                        <td>
+                            <span class="badge badge-danger">Failed</span>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Edit">
+									<i class="fa fa-pencil-alt"></i>
+								</button>
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Delete">
+									<i class="fa fa-times"></i>
+								</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            <img class="img-avatar img-avatar48" src="{%static 'assets/media/avatars/avatar4.jpg' %}" alt="">
+                        </td>
+                        <td class="font-w600">
+                            <a href="be_pages_generic_profile.html">Alice Moore</a>
+                        </td>
+                        <td>client5<em class="text-muted">@example.com</em></td>
+                        <td>
+                            <span class="badge badge-danger">Failed</span>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Edit">
+									<i class="fa fa-pencil-alt"></i>
+								</button>
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Delete">
+									<i class="fa fa-times"></i>
+								</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- END Full T

@@ -129,4 +129,5 @@ dmypy.json
 .pyre/
 
 # Dashboard
-UserAdmin/
+UserAdmin/__pycache__/*
+UserAdmin/static/*.*

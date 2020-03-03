@@ -21,7 +21,7 @@ urlpatterns = [
     # path('', userview.index),
     path('', userview.login_view),
     path('login/', userview.login_view),
-    path('login/', userview.login_view),
+    path('signup/', userview.signup_view),
     path('logout/', userview.logout_view),
     path('dashboard/', include('UserAdmin.urls')),
 ]

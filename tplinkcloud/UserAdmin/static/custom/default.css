@@ -1,0 +1,33 @@
+@charset "utf-8";
+/* Custom (Default) CSS Document */
+body{background-color:#e9ecf1;}
+.text-primary{color:#2493dd!important;}
+.bg-primary-op{background-color: rgba(36,147,221,.7)!important;}
+.btn-hero-primary{background-color:#2493dd;}
+#page-loader{background-color:#e2e4ea;}
+.bg-ps-orange {background: rgba(230,92,0,.5) linear-gradient(135deg,rgba(230,92,0,.5) 0,rgba(249,212,35,.5) 100%)!important;}
+.bg-ps-blue {background: rgba(6,101,208,.5) linear-gradient(135deg,rgba(6,101,208,.5) 0,rgba(31,117,213,.5) 100%)!important;}
+.bg-ps-yellow {background: rgba(242,184,12,.5) linear-gradient(135deg,rgba(242,184,12,.5) 0,rgba(255,193,8,.5) 100%)!important;}
+.bg-ps-grey {background: rgba(108,116,125,.5) linear-gradient(135deg,rgba(108,116,125,.5) 0,rgba(118,128,139,.5) 100%)!important;}
+
+.nav-main-link.active{background-color:#f1f1f1;}
+.nav-main-link:hover{background-color:#e1e1e1;}
+.nav-main-item.open>.nav-main-link-submenu{background-color:#f1f1f1;}
+.nav-main-submenu{background-color: #f5f5f5;}
+
+/* Success */
+.badge-success{background-color: #28a744;}
+.text-success{color: #28a744;}
+.btn-success{background-color: #28a744; border-color:#28a744;}
+
+/* Warning */
+.badge-warning{background-color: rgb(242,184,12);}
+.text-warning{color: rgb(242,184,12);}
+
+.text-warning-light{}
+
+/* Danger */
+.badge-danger{background-color: #d13242;}
+.text-danger{color: #d13242;}
+
+footer .fa, footer .far, footer .fas{opacity: 0.8;}
