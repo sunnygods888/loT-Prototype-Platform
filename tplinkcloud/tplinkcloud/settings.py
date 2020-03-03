@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'widget_tweaks',
+    'UserAdmin',
 ]
 
 MIDDLEWARE = [
@@ -80,6 +84,7 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'UserAdmin.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -118,3 +123,21 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication'
+    ]
+}
+
+LOGIN_URL = '/login'
+
+Env = os.environ.get('DJANGO_ENV', 'local')
+print(Env)
+if Env == 'local':
+    from .settings_local import *
+elif Env == 'prod':
+    print("import")
+    from .settings_prod import *
