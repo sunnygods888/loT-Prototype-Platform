@@ -1,0 +1,115 @@
+import shlex
+import subprocess
+
+api_login                   = ''' curl -X POST -H 'Content-Type: application/jsonrequest' -d '{  "method": "login",  "params": {  "appType": "Kasa_Iphone",  "cloudUserName": "user@domain.com",  "cloudPassword": "v6g-jyg-yjg",  "terminalUUID": "0e833d73-5943-4593-8d620364f1825028" } }' -v -i 'https://wap.tplinkcloud.com' '''
+api_getdevicelist           = '''curl -s --request POST "https://wap.tplinkcloud.com?token=cb2068b9-B694vEgkgiUkXxuW86XXf7Z HTTP/1.1"  --data '{"method":"getDeviceList"}'  --header "Content-Type: application/json" '''
+
+api_requestdata             = '''curl -s --request POST "https://en-wap.tplinkcloud.com?token=cb2068b9-B694vEgkgiUkXxuW86XXf7Z HTTP/1.1"  --data '{ "method":"passthrough", "params": {"deviceId": "8006384F903092998074D8C2269BA0021847FF1C", "requestData": "{\"emeter\":{\"get_realtime\":{}}}" } }' --header "Content-Type: application/json" >> data_file.json  '''
+api_requestdata_result      = '''curl -s --request POST "https://en-wap.tplinkcloud.com?token=cb2068b9-B694vEgkgiUkXxuW86XXf7Z HTTP/1.1"  --data '{ "method":"passthrough", "params": {"deviceId": "8006384F903092998074D8C2269BA0021847FF1C", "requestData": "{\"emeter\":{\"get_realtime\":{}}}" } }' --header "Content-Type: application/json"'''
+# api_requestdata           = '''curl -s --request POST --header "Content-Type: application/json" --data '{ "method":"passthrough", "params": {"deviceId": "8006384F903092998074D8C2269BA0021847FF1C", "requestData": "{\"emeter\":{\"get_realtime\":{}}}" } }' "https://wap.tplinkcloud.com/?token=cb2068b9-B694vEgkgiUkXxuW86XXf7Z HTTP/1.1" '''
+# api_requestdata_result    = '''curl -s --request POST --header "Content-Type: application/json" --data '{ "method":"passthrough", "params": {"deviceId": "8006384F903092998074D8C2269BA0021847FF1C", "requestData": "{\"emeter\":{\"get_realtime\":{}}}" } }' "https://eu-wap.tplinkcloud.com/?token=cb2068b9-B694vEgkgiUkXxuW86XXf7Z HTTP/1.1" >> data_file.json'''
+api_setrelaystate_on        = '''curl --request POST "https://eu-wap.tplinkcloud.com/?token=cb2068b9-B694vEgkgiUkXxuW86XXf7Z HTTP/1.1" \   --data '{"method":"passthrough", "params": {"deviceId": "800683CC8D6548F76FF035052306A30318A9FC66", "requestData": "{\"system\":{\"set_relay_state\":{\"state\":1}} }" }}' \   --header "Content-Type: application/json" '''
+api_setrelaystate_off       = '''curl --request POST "https://eu-wap.tplinkcloud.com/?token=cb2068b9-B694vEgkgiUkXxuW86XXf7Z HTTP/1.1" \   --data '{"method":"passthrough", "params": {"deviceId": "800683CC8D6548F76FF035052306A30318A9FC66", "requestData": "{\"system\":{\"set_relay_state\":{\"state\":0}} }" }}' \   --header "Content-Type: application/json" '''
+
+args = shlex.split(api_requestdata_result)
+
+#print (args)
+
+status, output = subprocess.getstatusoutput(args)
+
+print ('status :\n', status)
+print ('*******************')
+print ('output :\n', output)
+
+
+
+1. Login
+{
+    "error_code":0,
+    "result": {
+        "accountId":"2278531",
+        "regTime":"2017-12-0317:23:49",
+        "email":"user@domain.com",
+        "token":"cb2068b9-B694vEgkgiUkXxuW86XXf7Z"
+        }
+}
+
+2. GetDeviceList
+{
+    "error_code":0,
+    "result": {
+        "deviceList":
+        [
+            {
+                "deviceType":"IOT.SMARTPLUGSWITCH",
+                "role":0,
+                "fwVer":"1.0.10 Build 160316Rel.181342",
+                "appServerUrl":"https://euwap.tplinkcloud.com",
+                "deviceRegion":"eu-west1",
+                "deviceId":"8006384F903092998074D8C2269BA0021847FF1C",
+                "deviceName":"Wi-Fi Smart Plug With EnergyMonitoring",
+                "deviceHwVer":"1.0",
+                "alias":"Fridge",
+                "deviceMac":"50C7BF4BDBFB",
+                "oemId":"90AEEA7AECBF1A879FCA3C104C58C4D8",
+                "deviceModel":"HS110(UK)",
+                "hwId":"2448AB56FB7E126DE5CF876F84C6DEB5",
+                "fwId":"9176FB9731E6D84BD775BCF6BBD742EF",
+                "isSameRegion":true,
+                "status":1
+            },
+            {
+                "deviceType":"IOT.SMARTPLUGSWITCH",
+                "role":0,
+                "fwVer":"1.5.7 Build 180806Rel.135437",
+                "appServerUrl":"https://euwap.tplinkcloud.com",
+                "deviceRegion":"eu-west1",
+                "deviceId":"800629C065AE1067BEA28CE4F8519D4C1B363B6C",
+                "deviceName":"Smart Wi-Fi Plug With EnergyMonitoring",
+                "deviceHwVer":"2.1",
+                "alias":"Boiler",
+                "deviceMac":"68FF7B1B434B",
+                "oemId":"AB8C79FE7869756511CDC455BDFE41EA",
+                "deviceModel":"HS110(UK)",
+                "hwId":"0750E2C15BB77902833ABF45366B8E9A",
+                "fwId":"00000000000000000000000000000000",
+                "isSameRegion":true,
+                "status":1},
+            {
+                "deviceType":"IOT.SMARTPLUGSWITCH",
+                "role":0,"fwVer":"1.0.10 Build 160316Rel.181342",
+                "appServerUrl":"https://euwap.tplinkcloud.com",
+                "deviceRegion":"eu-west1",
+                "deviceId":"800683CC8D6548F76FF035052306A30318A9FC66",
+                "deviceName":"Wi-Fi Smart Plug With EnergyMonitoring",
+                "deviceHwVer":"1.0",
+                "alias":"Tv",
+                "deviceMac":"50C7BFB1CB1C",
+                "oemId":"90AEEA7AECBF1A879FCA3C104C58C4D8",
+                "deviceModel":"HS110(UK)",
+                "hwId":"2448AB56FB7E126DE5CF876F84C6DEB5",
+                "fwId":"9176FB9731E6D84BD775BCF6BBD742EF",
+                "isSameRegion":true,
+                "status":1
+                }
+        ]
+    }
+}
+
+3. requestData
+
+{
+    "error_code":0,
+    "result": {
+        "responseData":"{\"emeter\":{\"get_realtime\":{\"current\":0.017325,\"voltage\":242.674842,\"power\":0,\"total\":17.154000,\"err_code\":0}}}"
+        }
+}
+
+4. set_relay_state
+
+{
+    "error_code":0,
+    "result": {
+        "responseData":"{\"system\":{\"set_relay_state\":{\"err_code\":0}}}"
+        }
+}
