@@ -14,19 +14,22 @@ class UserUpdateForm(ModelForm):
         model = User
         fields = ('username', 'first_name', 'last_name')
 
-class LoginForm(forms.Form):
+class LoginForm(ModelForm):
     email = forms.EmailField()
-    password = forms.CharField(max_length=30)
+    password = forms.CharField()
+
+    class Meta:
+        model = User
+        fields = ('email', 'password')
 
 class SignUpForm(ModelForm):
-    user            = forms.CharField(max_length=30)
+    username        = forms.CharField(max_length=30)
     email           = forms.EmailField(max_length=100)
-    password        = forms.CharField(max_length=30)
-    confirmpassword = forms.CharField(max_length=30)
+    password        = forms.PasswordInput()
     
     class Meta:
         model = User
-        fields = ('username', 'email', 'password', 'confirmpassword', )
+        fields = ('username', 'email', 'password', )
 
     def create_user(self, user, email, password):
         if not email:

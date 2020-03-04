@@ -4,6 +4,10 @@ from .forms import UserAddForm, UserUpdateForm, LoginForm, SignUpForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+# from django.contrib.auth.hashers import make_password
+
+import shlex
+import subprocess
 
 # Create your views here.
 
@@ -15,32 +19,39 @@ def login_view(request):
     form = LoginForm(request.POST)
     error = ''
     if form.is_valid():
-        email = form.cleaned_data['email']
-        password = form.cleaned_data['password']
-        user = authenticate(request=request, username=email, password=password)
+        useremail   = form.cleaned_data.get('email')
+        pwd         = form.cleaned_data.get('password')
+
+        print(useremail)
+        print(pwd)
+
+        user = authenticate(request=request, email=useremail, password=pwd)
+        print(user)
         if user is not None:
-            login(request, user)
-            redirect_url = request.GET.get('next', 'dashboard')
+            login_api(email, password,)
+            #login(request, user)
+            #redirect_url = request.GET.get('next', 'dashboard')
             return redirect(redirect_url)
         error = 'Invalid Credential'
     print(error)
     return render(request, 'login.html', {'form': form, 'error': error})
 
+
 def signup_view(request):
     #if request.method == 'POST':
     form = SignUpForm(request.POST)
-    error = ''
+    error = ''    
     if form.is_valid():
         form.save()
         username    = form.cleaned_data.get('signup-username')
         useremail   = form.cleaned_data.get('signup-email')
         pwd         = form.cleaned_data.get('signup-password')
         pwd1        = form.cleaned_data.get('signup-password-confirm')
-        user        = authenticate(username=username, email=useremail, password=pwd)
-        login(request, user)
-        error = 'SignUp Success!'
-        return redirect('dashboard')
 
+        user        = authenticate(email=useremail, password=pwd)                
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+
+    print(error)
     return render(request, 'signup.html', {'form': form, 'error': error})
 
 @login_required
@@ -101,3 +112,11 @@ def set_password(request, pk):
         messages.add_message(request, messages.SUCCESS, 'Change Password Successfully')
         return redirect('UserAdmin:detail_user', pk=pk)
 
+def login_api(email, pwd, uuid):
+    api_login = ''' curl -X POST -H 'Content-Type: application/jsonrequest' -d '{  "method": "login",  "params": {  "appType": "Kasa_Iphone",  "cloudUserName": "user@domain.com",  "cloudPassword": "v6g-jyg-yjg",  "terminalUUID": "0e833d73-5943-4593-8d620364f1825028" } }' -v -i 'https://wap.tplinkcloud.com' '''
+    args = shlex.split(api_login)
+    print (args)
+    status, output = subprocess.getstatusoutput(args)
+    print ('status :\n', status)
+    print ('*******************')
+    print ('output :\n', output)

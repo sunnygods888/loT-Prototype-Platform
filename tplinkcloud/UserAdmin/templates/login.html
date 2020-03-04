@@ -113,7 +113,8 @@
                             <!-- For more info and examples you can check out https://github.com/jzaefferer/jquery-validation -->
                             <div class="row no-gutters justify-content-center">
                                 <div class="col-sm-8 col-xl-6">
-                                    <form class="js-validation-signin" action="be_pages_auth_all.html" method="POST">
+                                    <form class="js-validation-signin" action="" method="POST">
+                                        {% csrf_token %}
                                         <div class="py-3">
                                             <div class="form-group">
                                                 {{ form.email|add_class:"form-control"|attr:"id=login-email"|attr:"name=login-email"|attr:"placeholder:UserName"|attr:"required" }}
