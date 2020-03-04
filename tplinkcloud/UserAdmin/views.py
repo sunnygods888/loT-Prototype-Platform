@@ -18,20 +18,28 @@ def index(request):
 def login_view(request):
     form = LoginForm(request.POST)
     error = ''
-    if form.is_valid():
+    if form.is_valid():        
         useremail   = form.cleaned_data.get('email')
         pwd         = form.cleaned_data.get('password')
+        
+        # user = authenticate( username=username, email=useremail, password=pwd)
+        user = User.objects.get(email=useremail.lower())
+        user.backend = 'django.contrib.auth.backends.ModelBackend'        
 
-        print(useremail)
-        print(pwd)
-
-        user = authenticate(request=request, email=useremail, password=pwd)
-        print(user)
         if user is not None:
-            login_api(email, password,)
-            #login(request, user)
-            #redirect_url = request.GET.get('next', 'dashboard')
-            return redirect(redirect_url)
+            uuid = user.uuid
+            response = login_api(useremail, pwd, uuid)            
+            if (response["status"] == '0'):
+                userId = user.id
+                print(userId)
+                device_info = get_device_info(response["output"])
+                print(device_info)
+                # login(request, user)
+                redirect_url = request.GET.get('next', 'UserAdmin:dashboard')
+                return redirect(redirect_url)
+
+            error = 'Connection API Failed'
+            
         error = 'Invalid Credential'
     print(error)
     return render(request, 'login.html', {'form': form, 'error': error})
@@ -49,7 +57,9 @@ def signup_view(request):
         pwd1        = form.cleaned_data.get('signup-password-confirm')
 
         user        = authenticate(email=useremail, password=pwd)                
-        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+        login(request, user)
+        redirect_url = request.GET.get('next', 'UserAdmin:login')
+        return redirect(redirect_url)
 
     print(error)
     return render(request, 'signup.html', {'form': form, 'error': error})
@@ -113,10 +123,27 @@ def set_password(request, pk):
         return redirect('UserAdmin:detail_user', pk=pk)
 
 def login_api(email, pwd, uuid):
-    api_login = ''' curl -X POST -H 'Content-Type: application/jsonrequest' -d '{  "method": "login",  "params": {  "appType": "Kasa_Iphone",  "cloudUserName": "user@domain.com",  "cloudPassword": "v6g-jyg-yjg",  "terminalUUID": "0e833d73-5943-4593-8d620364f1825028" } }' -v -i 'https://wap.tplinkcloud.com' '''
+    api_login = ''' curl -X POST -H 'Content-Type: application/jsonrequest' -d '{  "method": "login",  "params": {  "appType": "Kasa_Iphone",  "cloudUserName": "''' + email + '''",  "cloudPassword": "''' + pwd + '''",  "terminalUUID": "''' + str(uuid) + '''" } }' -v -i 'https://wap.tplinkcloud.com' '''        
     args = shlex.split(api_login)
-    print (args)
     status, output = subprocess.getstatusoutput(args)
-    print ('status :\n', status)
-    print ('*******************')
-    print ('output :\n', output)
+
+    response = {
+        "status" : status,
+        "output" : output
+    }
+    
+    return response
+
+def get_device_info(output):
+    lines = output.split('\n')
+    resultstr = lines[-1]
+
+    result = json.loads(result)
+
+    info = {
+        'accountId' : result["result"]['accountId'],
+        'regTime'   : result["result"]['regTime'],
+        'token'     : result["result"]['token']
+    }
+
+    return info
