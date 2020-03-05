@@ -4,6 +4,7 @@ from .forms import UserAddForm, UserUpdateForm, LoginForm, SignUpForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+import json
 # from django.contrib.auth.hashers import make_password
 
 import shlex
@@ -28,15 +29,15 @@ def login_view(request):
 
         if user is not None:
             uuid = user.uuid
-            response = login_api(useremail, pwd, uuid)            
-            if (response["status"] == '0'):
+            print (uuid)
+            response = login_api(useremail, pwd, uuid)
+            if (response['status'] == 0):
                 userId = user.id
-                print(userId)
-                device_info = get_device_info(response["output"])
-                print(device_info)
+                device_info = get_device_info(response['output'])
+                device_list = get_device_list(device_info['token'])
                 # login(request, user)
                 redirect_url = request.GET.get('next', 'UserAdmin:dashboard')
-                return redirect(redirect_url)
+                # return redirect(redirect_url)
 
             error = 'Connection API Failed'
             
@@ -138,12 +139,45 @@ def get_device_info(output):
     lines = output.split('\n')
     resultstr = lines[-1]
 
-    result = json.loads(result)
+    json_result = json.loads(resultstr)
 
     info = {
-        'accountId' : result["result"]['accountId'],
-        'regTime'   : result["result"]['regTime'],
-        'token'     : result["result"]['token']
+        'accountId' : json_result["result"]['accountId'],
+        'regTime'   : json_result["result"]['regTime'],
+        'token'     : json_result["result"]['token']
     }
 
     return info
+
+def get_device_list(token):
+    print(token)
+    api_getdevicelist       = '''curl -s --request POST "https://wap.tplinkcloud.com?token=''' + token + ''' HTTP/1.1"  --data '{"method":"getDeviceList"}'  --header "Content-Type: application/json" '''
+    args = shlex.split(api_getdevicelist)
+    status, output = subprocess.getstatusoutput(args)
+    json_data = json.loads(output)
+    
+    response = json_data['error_code']
+    json_result = json_data['result']    
+
+    if (response == 0) :
+        for item in range(len(json_data['result']['deviceList'])):
+            device = json_data['result']['deviceList'][item]
+            
+            deviceType = device['deviceType']
+            role = device['role']
+            fwVer = device['fwVer']
+            appServerUrl = device['appServerUrl']
+            deviceRegion = device['deviceRegion']
+            deviceId = device['deviceId']
+            deviceName = device['deviceName']
+            deviceHwVer = device['deviceHwVer']
+            alias = device['alias']
+            deviceMac = device['deviceMac']
+            deviceModel = device['deviceModel']
+            hwId = device['hwId']
+            fwId = device['fwId']
+            isSameRegion = device['isSameRegion']
+            status = device['status']
+
+
+
