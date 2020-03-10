@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import User
+from .models import User, DeviceList, DeviceUsage
 from .forms import UserAddForm, UserUpdateForm, LoginForm, SignUpForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -14,7 +14,17 @@ import subprocess
 
 # @login_required
 def index(request):
-    return render(request, 'UserAdmin/index.html')
+    userId = request.user.id
+    deviceList = DeviceList.objects.filter(user_id=userId, status=1)
+    deviceCount = len(deviceList)
+
+    dashboard_info = {
+        # 'csrf'        : csrf(request),
+        'userId'      : request.user.id,
+        'email'       : request.user.email,
+        'deviceCount' : deviceCount
+    }
+    return render(request, 'UserAdmin/index.html', dashboard_info)
 
 def login_view(request):
     form = LoginForm(request.POST)
@@ -28,16 +38,17 @@ def login_view(request):
         user.backend = 'django.contrib.auth.backends.ModelBackend'        
 
         if user is not None:
-            uuid = user.uuid
-            print (uuid)
+            uuid = user.uuid            
             response = login_api(useremail, pwd, uuid)
             if (response['status'] == 0):
                 userId = user.id
                 device_info = get_device_info(response['output'])
-                device_list = get_device_list(device_info['token'])
-                # login(request, user)
+                token = device_info['token']
+                is_success = get_device_list(userId, token)
+                login(request, user)
+                
                 redirect_url = request.GET.get('next', 'UserAdmin:dashboard')
-                # return redirect(redirect_url)
+                return redirect(redirect_url)
 
             error = 'Connection API Failed'
             
@@ -58,7 +69,7 @@ def signup_view(request):
         pwd1        = form.cleaned_data.get('signup-password-confirm')
 
         user        = authenticate(email=useremail, password=pwd)                
-        login(request, user)
+        # login(request, user)
         redirect_url = request.GET.get('next', 'UserAdmin:login')
         return redirect(redirect_url)
 
@@ -149,35 +160,102 @@ def get_device_info(output):
 
     return info
 
-def get_device_list(token):
-    print(token)
+def get_device_list(userId, token):
     api_getdevicelist       = '''curl -s --request POST "https://wap.tplinkcloud.com?token=''' + token + ''' HTTP/1.1"  --data '{"method":"getDeviceList"}'  --header "Content-Type: application/json" '''
     args = shlex.split(api_getdevicelist)
     status, output = subprocess.getstatusoutput(args)
     json_data = json.loads(output)
     
     response = json_data['error_code']
-    json_result = json_data['result']    
+    json_result = json_data['result']
+
+    is_success= True
 
     if (response == 0) :
+        user_device_list = {}
         for item in range(len(json_data['result']['deviceList'])):
             device = json_data['result']['deviceList'][item]
-            
-            deviceType = device['deviceType']
-            role = device['role']
-            fwVer = device['fwVer']
-            appServerUrl = device['appServerUrl']
-            deviceRegion = device['deviceRegion']
-            deviceId = device['deviceId']
-            deviceName = device['deviceName']
-            deviceHwVer = device['deviceHwVer']
-            alias = device['alias']
-            deviceMac = device['deviceMac']
-            deviceModel = device['deviceModel']
-            hwId = device['hwId']
-            fwId = device['fwId']
-            isSameRegion = device['isSameRegion']
-            status = device['status']
+
+            user_device_list['deviceType'] = device['deviceType']
+            user_device_list['role'] = device['role']
+            user_device_list['fwVer'] = device['fwVer']
+            user_device_list['appServerUrl'] = device['appServerUrl']
+            user_device_list['deviceRegion'] = device['deviceRegion']
+            user_device_list['deviceId'] = device['deviceId']
+            user_device_list['deviceName'] = device['deviceName']
+            user_device_list['deviceHwVer'] = device['deviceHwVer']
+            user_device_list['alias'] = device['alias']
+            user_device_list['deviceMac'] = device['deviceMac']
+            user_device_list['deviceModel'] = device['deviceModel']
+            user_device_list['hwId'] = device['hwId']
+            user_device_list['fwId'] = device['fwId']
+            user_device_list['isSameRegion'] = device['isSameRegion']
+            user_device_list['status'] = device['status']
+
+            store_user_device_info(userId, token, user_device_list)
+
+    return is_success;
 
 
+def store_user_device_info(userId, token, deviceInfo):    
+    deviceform = DeviceList(user_id=userId, 
+                        deviceType=deviceInfo['deviceType'], 
+                        role=deviceInfo['role'],
+                        fwVer=deviceInfo['fwVer'], 
+                        appServerUrl=deviceInfo['appServerUrl'],
+                        deviceRegion=deviceInfo['deviceRegion'], 
+                        deviceId=deviceInfo['deviceId'],
+                        deviceName=deviceInfo['deviceName'], 
+                        deviceHwVer=deviceInfo['deviceHwVer'],
+                        alias=deviceInfo['alias'], 
+                        deviceMac=deviceInfo['deviceMac'],
+                        deviceModel=deviceInfo['deviceModel'], 
+                        hwId=deviceInfo['hwId'],
+                        fwId=deviceInfo['fwId'], 
+                        isSameRegion=deviceInfo['isSameRegion'],
+                        status=deviceInfo['status'])
 
+    userDevice = DeviceList.objects.filter(user_id=userId, deviceId=deviceInfo['deviceId']).first()
+
+    if userDevice is None:
+        deviceform.save()
+
+    api_requestdata  = '''curl --request POST "https://eu-wap.tplinkcloud.com/?token=''' + token + ''' HTTP/1.1" --data '{ "method":"passthrough", "params": {"deviceId": "''' + deviceInfo['deviceId'] + '''", "requestData": "emeter" } }' --header "Content-Type: application/json"'''
+    
+    args = shlex.split(api_requestdata)
+    status, output = subprocess.getstatusoutput(args)
+
+    device_info = {}
+    
+    lines = output.split('\n')
+    resultstr = lines[-1]
+
+    json_data = json.loads(resultstr)
+
+    response = json_data['error_code']
+
+    if (response == 0):        
+        json_result = json_data['result']
+        
+        responseData = json.loads(json_data['result']['responseData'])
+
+        device_info['error_code']   = response
+        device_info['current']      = responseData['emeter']['get_realtime']['current']
+        device_info['voltage']      = responseData['emeter']['get_realtime']["voltage"]
+        device_info['power']        = responseData['emeter']['get_realtime']["power"]
+        device_info['total']        = responseData['emeter']['get_realtime']["total"]
+
+        deviceUsageForm = DeviceUsage(user_id=userId, 
+                        device_id=deviceInfo['deviceId'], 
+                        current=device_info['current'],
+                        voltage=device_info['voltage'], 
+                        power=device_info['power'],
+                        total=device_info['total'])
+
+        # deviceUsageForm.save()
+
+    else:
+        device_info['error_code'] = response
+        device_info['msg']        = json_data['msg']
+
+    return device_info

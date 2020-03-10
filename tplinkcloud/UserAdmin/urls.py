@@ -19,7 +19,8 @@ from . import views
 app_name = 'UserAdmin'
 
 urlpatterns = [
-    path('dashboard/', views.index, name="dashboard"),
+    path('dashboard/<int:pk>', views.index, name="dashboard"),
+    path('login/', views.login_view, name="login"),
     path('', views.index, name="dashboard"),
     path('list/', views.list_user, name="list_user"),
     path('add/', views.add_user, name="add_user"),

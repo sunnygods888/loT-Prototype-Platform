@@ -131,3 +131,7 @@ dmypy.json
 # Dashboard
 UserAdmin/__pycache__/*
 UserAdmin/static/*.*
+
+tplinkcloud/db - Copy.sqlite3
+tplinkcloud/org_db.sqlite3
+tplinkcloud/UserAdmin/API_result.txt
